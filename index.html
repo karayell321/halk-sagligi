@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Halk Sağlığı Hemşireliği - Uygulama Portalı</title>
+<style>
+:root{
+  --bg:#f4f6f5; --card:#ffffff; --ink:#1f2d27; --sub:#5b6b64; --line:#dfe6e2;
+  --accent:#2f7a5f; --accent-d:#245f49; --danger:#b3261e; --chip:#e7f2ec;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#121815; --card:#1a221e; --ink:#eaf1ec; --sub:#9fb3a9; --line:#2a352f; --accent:#4fae86; --accent-d:#6ec59f; --chip:#1f2c26; }
+}
+:root[data-theme="dark"]{ --bg:#121815; --card:#1a221e; --ink:#eaf1ec; --sub:#9fb3a9; --line:#2a352f; --accent:#4fae86; --accent-d:#6ec59f; --chip:#1f2c26; }
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;min-height:100%;}
+.wrap{max-width:980px;margin:0 auto;padding:18px 14px 60px;}
+header.top{position:sticky;top:0;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top,0px));border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+header.top h1{font-size:15px;margin:0;line-height:1.3;}
+header.top small{color:var(--sub);display:block;font-weight:400;}
+.btn{border:none;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff;}
+.btn:hover{background:var(--accent-d);}
+.btn.ghost{background:transparent;color:var(--accent-d);border:1px solid var(--line);}
+.btn.small{padding:7px 12px;font-size:12.5px;}
+.btn.danger{background:var(--danger);}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;}
+.card h2{margin:0 0 4px;font-size:17px;}
+.card h3{margin:20px 0 8px;font-size:14px;color:var(--accent-d);border-bottom:1px dashed var(--line);padding-bottom:6px;}
+.card h4{margin:14px 0 6px;font-size:12.8px;color:var(--sub);text-transform:uppercase;letter-spacing:.02em;}
+.hint{color:var(--sub);font-size:12.5px;margin:0 0 14px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:620px){.grid,.grid3{grid-template-columns:1fr;}}
+label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:4px;font-weight:600;}
+.field{margin-bottom:12px;}
+input[type=text],input[type=number],input[type=date],input[type=password],textarea,select{
+  width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);font-size:13.5px;font-family:inherit;
+}
+textarea{min-height:64px;resize:vertical;}
+.center{display:flex;align-items:center;justify-content:center;min-height:70vh;padding:20px;}
+.login-card{max-width:380px;width:100%;text-align:center;}
+.choice{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+.choice .btn{flex:1;min-width:140px;}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch;}
+.tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--sub);padding:8px 13px;border-radius:99px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.tabs button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.block{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-bottom:12px;position:relative;}
+.block .rm{position:absolute;top:8px;right:8px;}
+.chk-grid{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:8px;}
+.chk-row{display:flex;align-items:center;gap:8px;font-size:13px;}
+.chk-row input[type=checkbox]{width:16px;height:16px;flex:0 0 auto;}
+.submit-bar{position:sticky;bottom:0;bottom:env(safe-area-inset-bottom,0px);background:var(--bg);padding:12px 0;margin-top:10px;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid var(--line);flex-wrap:wrap;}
+.subm-item{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.subm-item:hover{border-color:var(--accent);}
+.status{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:99px;}
+.status.new{background:#fde7e0;color:#a3400f;}
+.status.graded{background:var(--chip);color:var(--accent-d);}
+.readonly-box{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13px;white-space:pre-wrap;min-height:20px;margin-bottom:6px;}
+table.eval{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+table.eval th,table.eval td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top;}
+table.eval th{background:var(--chip);color:var(--accent-d);font-size:12px;}
+table.eval input{width:70px;}
+.toplam{font-size:20px;font-weight:800;color:var(--accent-d);}
+.msg{font-size:12.5px;padding:8px 12px;border-radius:9px;margin-bottom:10px;}
+.msg.err{background:#fde7e0;color:#a3400f;}
+.msg.ok{background:var(--chip);color:var(--accent-d);}
+.small-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.small-table th,.small-table td{border:1px solid var(--line);padding:6px;}
+.small-table th{background:var(--chip);color:var(--accent-d);}
+.small-table input{width:100%;padding:5px 6px;font-size:12.5px;}
+.overflow-x{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.print-header{display:none;}
+@media print{
+  body{background:#fff;color:#000;}
+  .print-header{display:block;margin-bottom:16px;border-bottom:2px solid #000;padding-bottom:10px;}
+  .print-header h2{margin:0 0 4px;font-size:16px;}
+  .print-header p{margin:0;font-size:12.5px;}
+  header.top,.tabs,.submit-bar,button,.hint{display:none !important;}
+  .card{border:none;box-shadow:none;page-break-inside:avoid;padding:0 0 14px;}
+  .wrap{max-width:100%;padding:0;}
+  input,textarea,select{border:none;background:transparent;padding:2px 0;color:#000;font-size:12px;}
+  table.eval th,table.eval td,.small-table th,.small-table td{border:1px solid #999;}
+  .readonly-box{border:1px solid #ccc;}
+}
+</style>
+<!-- GitHub Pages gibi Claude dışı bir yerde barındırırsanız paylaşılan veri depolama için Firebase kullanılır. -->
+<script>
+// ==================== GOOGLE SHEETS / APPS SCRIPT YAPILANDIRMASI ====================
+// Bu uygulamayı GitHub Pages, Netlify vb. bir yerde (claude.ai dışında) yayınlıyorsanız
+// aşağıdaki bilgileri KENDİ ücretsiz Firebase projenizin bilgileriyle doldurun.
+// Nasıl alınacağı için sohbetteki kurulum talimatlarına bakın.
+// claude.ai üzerinde artifact olarak kullanıyorsanız bu alanı BOŞ bırakabilirsiniz,
+// sistem otomatik olarak Claude'un kendi paylaşılan veritabanını kullanır.
+window.FIREBASE_CONFIG = {}; // Bu sürümde kullanılmıyor. Veri Google Sheets'e gider.
+// EN KOLAY YÖNTEM: Google E-Tablolar + Apps Script kullanmak isterseniz,
+// aşağıya Apps Script "Web App" dağıtım URL'nizi yapıştırın (aşağıdaki gibi biter: /exec)
+// Firebase'e HİÇ gerek kalmaz. Kurulum talimatları sohbette verildi.
+window.SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxgr3tq_NPZgOoAEG6IB6FYpJuKFMzxegBSoddUmMUZhlPKXS-ndshamvKRPiUgIdHFWQ/exec;
+</script>
+</head>
+<body>
+<div id="app"></div>
+<script>
+let dbNS=null;
+const Storage = {
+  backend: 'none',
+  ns: null,
+  async init(){
+    // 1) Önce claude.ai artifact ortamı denenir
+    if(typeof window.claude !== 'undefined' && window.claude && window.claude.use){
+      try{
+        const ns = await window.claude.use('db');
+        if(ns){ this.ns = ns; this.backend = 'claude'; return; }
+      }catch(e){}
+    }
+    // 2) Google E-Tablolar (Apps Script Web App) yapılandırılmışsa - en kolay yöntem
+    if(window.SHEETS_WEBAPP_URL && window.SHEETS_WEBAPP_URL.trim() && !window.SHEETS_WEBAPP_URL.includes("https://script.google.com/macros/s/AKfycbxgr3tq_NPZgOoAEG6IB6FYpJuKFMzxegBSoddUmMUZhlPKXS-ndshamvKRPiUgIdHFWQ/exec")){
+      this.ns = window.SHEETS_WEBAPP_URL.trim();
+      this.backend = 'sheets';
+      return;
+    }
+    // 3) Firebase yapılandırılmışsa
+    const cfg = window.FIREBASE_CONFIG;
+    if(cfg && cfg.apiKey && cfg.projectId && typeof firebase !== 'undefined'){
+      try{
+        firebase.initializeApp(cfg);
+        this.ns = firebase.firestore();
+        this.backend = 'firebase';
+        return;
+      }catch(e){ console.error('Firebase başlatılamadı', e); }
+    }
+    this.backend = 'none';
+  },
+  async setSubmission(id, data){
+    if(this.backend==='claude') return this.ns.doc('submissions/'+id).set(data);
+    if(this.backend==='firebase') return this.ns.collection('submissions').doc(id).set(data);
+    if(this.backend==='sheets'){
+      const res = await fetch(this.ns, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action:'save', id, data}) });
+      return res.json().catch(()=>({}));
+    }
+    throw new Error('no-backend');
+  },
+  async getSubmissions(){
+    if(this.backend==='claude'){
+      const res = await this.ns.collection('submissions').get();
+      const docs = res && res.docs ? res.docs : (Array.isArray(res)?res:[]);
+      return docs.map(d=> (d.data ? d.data() : d)).filter(Boolean);
+    }
+    if(this.backend==='firebase'){
+      const snap = await this.ns.collection('submissions').get();
+      const arr=[]; snap.forEach(doc=>arr.push(doc.data()));
+      return arr;
+    }
+    if(this.backend==='sheets'){
+      const res = await fetch(this.ns + (this.ns.includes('?')?'&':'?') + 't=' + Date.now());
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    }
+    return [];
+  },
+  async deleteSubmission(id){
+    if(this.backend==='claude') return this.ns.doc('submissions/'+id).delete();
+    if(this.backend==='firebase') return this.ns.collection('submissions').doc(id).delete();
+    if(this.backend==='sheets'){
+      const res = await fetch(this.ns, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action:'delete', id}) });
+      return res.json().catch(()=>({}));
+    }
+  }
+};
+async function initCapabilities(){ await Storage.init(); }
+
+const FACULTY_USER = "halksağlığı";
+const FACULTY_PASS = "123456";
+
+const AILE_SAGLIK_KEYS = ["Ağız-Diş","Akciğer hastalığı","Alerji (besin, ilaç, böcek vb.)","Alkol/ilaç kullanma","Anemi","Astım","Ateşli romatizma","Davranışsal/Duygusal","Diyabet","Egzema","Fazla tartılı","Fiziksel engel","Hastaneye yatma (operasyon)","İşitme güçlüğü","Kalp","Kanser","Kas-iskelet","Mental engel","Nörolojik","Öğrenme problemi","Soğuk algınlığı","Yüksek kan basıncı"];
+const OGUN_LISTESI = [["sabah","Sabah"],["kusluk","Kuşluk"],["ogle","Öğle"],["ikindi","İkindi"],["aksam","Akşam"],["gece","Gece"]];
+
+function blankStudentForm(){
+  return {
+    id:null, ad:"", no:"", alan1:"", alan2:"", iletisim:"",
+    vaka:{
+      ad:"", sinif:"", yas:"", cinsiyet:"", kardes:"", anneAdi:"", babaAdi:"", sigortaGuvencesi:"",
+      asiDurumu:"", asiNotlar:"", tibbiNotlar:"", acilDurum:"",
+      aileSaglik:{},
+      taramaGuncel:{gormeSag:"",gormeSol:"",gormeIki:"",odyometriSag:"",odyometriSol:"",kbSist:"",kbDiast:"",boy:"",kilo:"",anemi:"",sacBiti:"",saglikDavranislari:"",psikososyal:"",skolyoz:"",notlar:""},
+      degerlendirenHemsire:"",
+      tanilar:[]
+    },
+    bakimPlanlari:[],
+    besinKayitlari:[],
+    toplumTanilama:{
+      ogrenciAdi:"", konum:"", postaKodu:"", adi:"", alani:"", nufus:"",
+      konut:{yapiselSorun:false,evsiz:false,guclu:""},
+      guvenlik:{suc:false,kirlilik:false,oyunAlani:false,kaynakYetersiz:false,siddet:false,fiziksel:false,trafik:false,kimyasal:false,radyasyon:false,guclu:""},
+      sanitasyon:{bocek:false,suYetersiz:false,kanalizasyon:false,guclu:""},
+      gelir:{dusuk:false,satinalmaGucluk:false,saglikGuvenceYok:false,guclu:""},
+      beslenme:{dengesiz:false,fazlaKilo:false,dusukKilo:false,guclu:""},
+      madde:{uyarici:false,alkol:false,sigara:false,dumanMaruz:false,yasadisi:false,guclu:""},
+      saglikBakimDenetimi:{sureksizlik:false,yetersizlik:false,guclu:""},
+      toplumKaynaklariIletisim:{kaynakYok:false,dilEngeli:false,kulturelEngel:false,egitimEngel:false,ulasimEngeli:false,sinirliErisim:false,guclu:""},
+      sosyalEtkilesim:{sinirli:false,azAktivite:false,guclu:""},
+      kisilerarasi:{gucluk:false,gerginlik:false,guclu:""},
+      maneviyat:{endise:false,catisma:false,guclu:""},
+      windshield:"", yorumlar:""
+    },
+    tarama:{adi:"",tarih:"",yer:"",sure:"",aracGerec:"",sayi:"",destekKurulus:"",riskli:"",sevk:"",danisma:"",izlem:""},
+    taramaTakvimi:[], taramaSonuclari:[], gormeTaramasi:[],
+    saglikEgitimi:{konu:"",hedefGrup:"",yerSure:"",amac:"",bilissel:"",duyussal:"",psikomotor:"",giris:"",govde:"",sonuc:"",dagitilanMateryal:"",katilimci:"",danismaSayisi:"",izlemSayisi:"",icerikBaslik:"",icerik:"",kaynaklar:""},
+    universiteProgrami:{adi:"",ekip:"",duzey:"",hedefKitle:"",amac:"",hedefler:"",tanilama:"",planlama:"",danismaKurulu:"",tarihSure:"",aracGerec:"",surecBasamaklari:[],kaynaklar:"",duyuru:"",degerlendirme:"",gucluk:"",gorevDagilimi:"",notlar:""},
+    gunluk:[],
+    submittedAt:null, status:"taslak"
+  };
+}
+const EVAL_CRITERIA = [
+  ['genel','Genel Değerlendirme','%10',['Arkadaşları, ekip üyeleri, öğretim elemanları ve diğer görevliler ile iletişim','Kılık kıyafet düzeni','Sorumluluk alma','Hazırlanan materyalleri öğretim elemanları ile paylaşma','Kurumun kurallarına ve çalışma saatlerine uyum','Profesyonellik ve uyum']],
+  ['okul','Okul Sağlığı Uygulamaları','%40',['Tarama programları (Hazırlık ve Planlama, Uygulama, Değerlendirme ve Rapor)','Vaka dosyası oluşturma','Sağlık sorunları olan vakayı tanılama ve vakaya ilişkin hemşirelik süreci','Sağlık eğitimi çalışmaları (Hazırlık ve Planlama, Uygulama, Değerlendirme ve Rapor)','Okul sağlığı uygulamalarında verilen görevlere uyum','Toplum Tanılama (Okul içi ve Çevresinin Gözlemi)']],
+  ['universite','Üniversite Uygulamaları','%40',['Üniversite çalışma kurallarına uyum ve katılım','Arkadaşları, ekip üyeleri, öğretim elemanları ve diğer çalışanlar ile iletişim','Yaygın sağlık sorunlarından birine ilişkin sağlığı koruma/sağlığı geliştirme programı planlama, uygulama, değerlendirme ve raporlandırma','Sağlık eğitimi çalışmaları (Hazırlık ve Planlama, Uygulama, Değerlendirme ve Rapor)','Alana özgü makale kritiği ve sunum','Alana özgü vaka analizi, sunum ve grup çalışmalarına katılım','Üniversite uygulamalarının raporlandırılması','Üniversite uygulamalarında verilen görevlere uyum']],
+  ['dosya','Dosya Çalışması','%10',['Dosya düzeni','Dosyanın içeriğinin uygunluğu','Dosyanın zamanında teslimi']]
+];
+const CHECKLIST_ITEMS = [
+  ['','Öğrenci Uygulama Günlüğü'],
+  ['Okul Sağlığı Uygulamaları Rotasyonu','Vaka formları'],
+  ['Okul Sağlığı Uygulamaları Rotasyonu','Toplum tanılama formları ve okul raporu'],
+  ['Okul Sağlığı Uygulamaları Rotasyonu','Tarama Programı Plan ve Kayıt Formu'],
+  ['Okul Sağlığı Uygulamaları Rotasyonu','Tarama Sonuçları Formu'],
+  ['Okul Sağlığı Uygulamaları Rotasyonu','Okul Sağlığı Eğitimi İçeriği ve Materyalleri'],
+  ['Okul Sağlığı Uygulamaları Rotasyonu','Sağlık Eğitimi Formu'],
+  ['Üniversite Rotasyonu','Sağlığı Koruma/Geliştirme Program planlama ve değerlendirme raporu ve ekleri'],
+  ['Üniversite Rotasyonu','Eğitim faaliyetleri ve çalışma materyalleri'],
+  ['Üniversite Rotasyonu','Araştırma makalesi kritiği'],
+  ['Üniversite Rotasyonu','Vaka analizi ve bakım planı'],
+  ['Diğer Belgeler (varsa)','Kurum ile ilgili raporlar, diğer belgeler, vb.'],
+];
+let form = blankStudentForm();
+let state = { view:'home', detailId:null };
+let facultyAuthed = false;
+let submissions = [];
+
+function getPath(o,p){ return p.split('.').reduce((x,k)=> (x==null?x:x[k]), o); }
+function setPath(o,p,v){ const ks=p.split('.'); let x=o; for(let i=0;i<ks.length-1;i++){ x = x[ks[i]]; } x[ks[ks.length-1]] = v; }
+function esc(s){ return (s==null?'':s).toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+
+const BLANK_FACTORIES = {
+  tani: ()=>({tarih:"",tani:""}),
+  besinGun: ()=>({gun:"",boy:"",kilo:"",cinsiyet:"",su:"",ogunler:{sabah:{saat:"",besin:"",miktar:""},kusluk:{saat:"",besin:"",miktar:""},ogle:{saat:"",besin:"",miktar:""},ikindi:{saat:"",besin:"",miktar:""},aksam:{saat:"",besin:"",miktar:""},gece:{saat:"",besin:"",miktar:""}}}),
+  bakimPlani: ()=>({tani:"",amac:"",girisim:"",degerlendirme:""}),
+  gunluk: ()=>({tarih:"",not:""}),
+  taramaTakvim: ()=>({sinifSube:"",mevcut:"",gunler:""}),
+  taramaSonuc: ()=>({adSoyad:"",yas:"",boy:"",kilo:"",bki:"",bkiPersentil:"",kanBasinci:"",kbPersentil:"",parazit:"",degerlendirme:""}),
+  gormeTaramasi: ()=>({adSoyad:"",gozSag:"",gozSol:"",gozIki:"",gozluksuzSag:"",gozluksuzSol:"",gozluksuzIki:"",dusunceler:""}),
+  surecBasamagi: ()=>({metin:""})
+};
+
+function render(){
+  const app = document.getElementById('app');
+  if(state.view==='home') app.innerHTML = renderHome();
+  else if(state.view==='student') app.innerHTML = renderStudent();
+  else if(state.view==='faculty-login') app.innerHTML = renderFacultyLogin();
+  else if(state.view==='faculty-panel') app.innerHTML = renderFacultyPanel();
+  else if(state.view==='faculty-detail') app.innerHTML = renderFacultyDetail();
+  attachTopHandlers();
+  if(state.view==='student') renderTabContent();
+  if(state.view==='faculty-detail') bindGradeHandlers();
+}
+
+function renderHome(){
+  let warn = '';
+  if(Storage.backend==='none'){
+    warn = `<div class="msg err" style="text-align:left;margin-top:14px">Veri deposu bağlı değil. GitHub Pages gibi bir yerde yayınladıysanız, dosyanın başındaki <code>SHEETS_WEBAPP_URL</code> (önerilen, kolay) veya <code>FIREBASE_CONFIG</code> alanını doldurmanız gerekir; aksi halde gönderilen formlar kaydedilemez.</div>`;
+  } else if(Storage.backend==='sheets'){
+    warn = `<p class="hint" style="margin-top:14px">Bağlantı: Google E-Tablolar (harici barındırma)</p>`;
+  } else if(Storage.backend==='firebase'){
+    warn = `<p class="hint" style="margin-top:14px">Bağlantı: Firebase (harici barındırma)</p>`;
+  }
+  return `<div class="center"><div class="card login-card">
+    <h2>Halk Sağlığı Hemşireliği</h2>
+    <p class="hint">2025–2026 Güz Yarıyılı Öğrenci Uygulama Portalı<br>KMÜ Sağlık Bilimleri Fakültesi</p>
+    <div class="choice">
+      <button class="btn" data-go="student">Öğrenciyim</button>
+      <button class="btn ghost" data-go="faculty-login">Akademisyenim</button>
+    </div>
+    ${warn}
+    <p class="hint" style="margin-top:18px;margin-bottom:0">Geliştiren: Öğretim Görevlisi Ömer ÖZTÜRK</p>
+    </div></div>`;
+}
+function renderFacultyLogin(){
+  return `<div class="center"><div class="card login-card">
+    <h2>Akademisyen Girişi</h2>
+    <p class="hint">Değerlendirme panosuna erişmek için giriş yapınız.</p>
+    <div id="loginMsg"></div>
+    <div class="field" style="text-align:left"><label>Kullanıcı adı</label><input id="fu" type="text" autocomplete="off"></div>
+    <div class="field" style="text-align:left"><label>Şifre</label><input id="fp" type="password"></div>
+    <div class="choice"><button class="btn" id="doLogin">Giriş Yap</button><button class="btn ghost" data-go="home">Geri</button></div>
+  </div></div>`;
+}
+
+const tabs = [
+  ['bilgi','Bilgiler'],['vaka','Vaka - Sağlık Bilgi Formu'],['besin','24 Saatlik Besin Kaydı'],
+  ['bakim','Bakım Planları'],['toplum','Toplum Tanılama'],['tarama','Tarama Programı'],
+  ['egitim','Sağlık Eğitimi'],['universite','Üniversite Programı'],['gunluk','Uygulama Günlüğü'],
+];
+function renderStudent(){
+  const activeTab = form._tab || 'bilgi';
+  return `<header class="top"><div><h1>Öğrenci Uygulama Dosyası<br><small>Halk Sağlığı Hemşireliği Dersi</small></h1></div>
+  <button class="btn ghost small" data-go="home">Ana Sayfa</button></header>
+  <div class="wrap">
+    <div class="tabs">${tabs.map(t=>`<button data-tab="${t[0]}" class="${activeTab===t[0]?'active':''}">${t[1]}</button>`).join('')}</div>
+    <div id="tabContent"></div>
+    <div class="submit-bar"><span class="hint" id="saveHint"></span>
+      <button class="btn ghost" id="printBtn">PDF Olarak İndir</button>
+      <button class="btn" id="submitBtn">Akademisyene İlet</button>
+    </div>
+  </div>`;
+}
+
+function printStudentAll(){
+  const el = document.getElementById('tabContent');
+  const header = `<div class="print-header"><h2>Halk Sağlığı Hemşireliği Dersi — Öğrenci Uygulama Dosyası</h2>
+    <p>${esc(form.ad)} — No: ${esc(form.no)}${form.alan1?(' — 1. Rotasyon: '+esc(form.alan1)):''}${form.alan2?(' — 2. Rotasyon: '+esc(form.alan2)):''}</p>
+    <p>Yazdırma Tarihi: ${new Date().toLocaleDateString('tr-TR')}</p></div>`;
+  const all = tabs.map(t=>`<h3 style="margin-top:22px;page-break-before:auto">${t[1]}</h3>` + TAB_MAP[t[0]]()).join('');
+  el.innerHTML = header + all;
+  window.print();
+  setTimeout(renderTabContent, 300);
+}
+
+const TAB_MAP = {bilgi:tplBilgi,vaka:tplVaka,besin:tplBesin,bakim:tplBakim,toplum:tplToplum,tarama:tplTarama,egitim:tplEgitim,universite:tplUniversite,gunluk:tplGunluk};
+function renderTabContent(){
+  const c = document.getElementById('tabContent');
+  const t = form._tab || 'bilgi';
+  c.innerHTML = TAB_MAP[t]();
+}
+
+function inp(path,type,label,extra){
+  const v = getPath(form,path) ?? "";
+  extra = extra||"";
+  if(type==='textarea') return `<div class="field"><label>${label}</label><textarea data-path="${path}" ${extra}>${esc(v)}</textarea></div>`;
+  return `<div class="field"><label>${label}</label><input data-path="${path}" type="${type}" value="${esc(v)}" ${extra}></div>`;
+}
+function chk(path,label){
+  const v = !!getPath(form,path);
+  return `<label class="chk-row"><input type="checkbox" data-path="${path}" data-bool="1" ${v?'checked':''}> ${label}</label>`;
+}
+
+function tplBilgi(){
+  return `<div class="card"><h2>Öğrenci Bilgileri</h2>
+  <p class="hint">Değerlendirme Formunda ve dosya teslim kaydında kullanılacaktır. Adınız ve numaranız zorunludur.</p>
+  <div class="grid">
+    ${inp('ad','text','Adı Soyadı')}
+    ${inp('no','text','Öğrenci Numarası')}
+    ${inp('alan1','text','Uygulama Alanı (1. Rotasyon)')}
+    ${inp('alan2','text','Uygulama Alanı (2. Rotasyon)')}
+  </div>
+  ${inp('iletisim','text','İletişim Bilgileri')}
+  </div>`;
+}
+
+function tplVaka(){
+  const v = form.vaka;
+  const aileRows = AILE_SAGLIK_KEYS.map(k=>{
+    const cur = v.aileSaglik[k] || {};
+    return `<tr><td>${k}</td>
+      <td style="text-align:center"><input type="checkbox" data-path="vaka.aileSaglik.${k}.cocuk" data-bool="1" data-ensure="vaka.aileSaglik.${k}" ${cur.cocuk?'checked':''}></td>
+      <td style="text-align:center"><input type="checkbox" data-path="vaka.aileSaglik.${k}.anne" data-bool="1" data-ensure="vaka.aileSaglik.${k}" ${cur.anne?'checked':''}></td>
+      <td style="text-align:center"><input type="checkbox" data-path="vaka.aileSaglik.${k}.baba" data-bool="1" data-ensure="vaka.aileSaglik.${k}" ${cur.baba?'checked':''}></td>
+      <td style="text-align:center"><input type="checkbox" data-path="vaka.aileSaglik.${k}.kardes" data-bool="1" data-ensure="vaka.aileSaglik.${k}" ${cur.kardes?'checked':''}></td>
+    </tr>`;
+  }).join('');
+  const tk = v.taramaGuncel;
+  const tanilar = form.vaka.tanilar.map((t,i)=>`<tr>
+    <td><input type="date" data-path="vaka.tanilar.${i}.tarih" value="${esc(t.tarih)}"></td>
+    <td><input type="text" data-path="vaka.tanilar.${i}.tani" value="${esc(t.tani)}" placeholder="Hemşirelik tanısı"></td>
+    <td><button class="btn danger small" data-rm="vaka.tanilar" data-idx="${i}">Sil</button></td></tr>`).join('');
+  return `<div class="card"><h2>Öğrenci Sağlık Bilgi Formu (Vaka)</h2>
+    <div class="grid3">
+      ${inp('vaka.ad','text','Adı Soyadı')} ${inp('vaka.sinif','text','Sınıfı')} ${inp('vaka.yas','text','Yaşı')}
+      ${inp('vaka.cinsiyet','text','Cinsiyet (K/E)')} ${inp('vaka.kardes','text','Kardeş Sayısı')} ${inp('vaka.sigortaGuvencesi','text','Sağlık Güvencesi')}
+      ${inp('vaka.anneAdi','text','Anne Adı')} ${inp('vaka.babaAdi','text','Baba Adı')}
+      <div class="field"><label>Aşılanma Durumu</label><select data-path="vaka.asiDurumu">
+        <option value=""></option><option ${v.asiDurumu==='Tamam'?'selected':''}>Tamam</option>
+        <option ${v.asiDurumu==='Eksik'?'selected':''}>Eksik</option><option ${v.asiDurumu==='Bilinmiyor'?'selected':''}>Bilinmiyor</option>
+      </select></div>
+    </div>
+    ${inp('vaka.asiNotlar','textarea','Aşılanma İle İlgili Notlar (aşı takvimi, geçirilmiş çocukluk çağı hastalıkları vb.)')}
+    ${inp('vaka.tibbiNotlar','textarea','Tıbbi Muayene / Diş Muayene Notları')}
+    ${inp('vaka.acilDurum','textarea','Çocuğun Acil ve Özel Sağlık Durumu - Aldığı Medikal Tedaviler')}
+
+    <h3>Öğrenci ve Ailesinin Sağlık Problemleri</h3>
+    <div class="overflow-x"><table class="small-table"><tr><th>Sağlık Sorunu</th><th>Çocuk</th><th>Anne</th><th>Baba</th><th>Kardeş</th></tr>${aileRows}</table></div>
+
+    <h3>Güncel Taramalar</h3>
+    <div class="grid3">
+      ${inp('vaka.taramaGuncel.gormeSag','text','Görme - Sağ (20/..)')}
+      ${inp('vaka.taramaGuncel.gormeSol','text','Görme - Sol (20/..)')}
+      ${inp('vaka.taramaGuncel.gormeIki','text','Görme - Her İki Göz (20/..)')}
+      ${inp('vaka.taramaGuncel.odyometriSag','text','Odyometri - Sağ')}
+      ${inp('vaka.taramaGuncel.odyometriSol','text','Odyometri - Sol')}
+      ${inp('vaka.taramaGuncel.kbSist','text','Kan Basıncı - Sistolik')}
+      ${inp('vaka.taramaGuncel.kbDiast','text','Kan Basıncı - Diastolik')}
+      ${inp('vaka.taramaGuncel.boy','text','Büyüme - Boy')}
+      ${inp('vaka.taramaGuncel.kilo','text','Büyüme - Kilo')}
+      ${inp('vaka.taramaGuncel.anemi','text','Anemi (N/A/T/TA/İ/S)')}
+      ${inp('vaka.taramaGuncel.sacBiti','text','Saç Biti (N/A/T/TA/İ/S)')}
+      ${inp('vaka.taramaGuncel.skolyoz','text','Skolyoz (N/A/T/TA/İ/S)')}
+      ${inp('vaka.taramaGuncel.saglikDavranislari','text','Sağlık Davranışları')}
+      ${inp('vaka.taramaGuncel.psikososyal','text','Psikososyal Problem')}
+    </div>
+    ${inp('vaka.taramaGuncel.notlar','textarea','Taramalar İle İlgili Notlar')}
+
+    <h3>Vakanın Hastalık Öyküsü - Öncelik Sırasına Göre Tanı Listesi</h3>
+    ${inp('vaka.degerlendirenHemsire','text','Değerlendirmeyi Yapan Hemşirenin Adı-Soyadı')}
+    <div class="overflow-x"><table class="small-table"><tr><th style="width:130px">Tarih</th><th>Tanı</th><th></th></tr>${tanilar}</table></div>
+    <button class="btn ghost small" data-add="vaka.tanilar" data-factory="tani" style="margin-top:8px">+ Tanı Ekle</button>
+  </div>`;
+}
+
+function ogunFields(basePath){
+  return OGUN_LISTESI.map(([k,label])=>`
+    <div class="field"><label>${label} - Saat / Besinler / Miktar</label>
+      <div class="grid3">
+        <input type="text" placeholder="Saat" data-path="${basePath}.ogunler.${k}.saat" value="${esc(getPath(form,basePath+'.ogunler.'+k+'.saat'))}">
+        <input type="text" placeholder="Besinler" data-path="${basePath}.ogunler.${k}.besin" value="${esc(getPath(form,basePath+'.ogunler.'+k+'.besin'))}">
+        <input type="text" placeholder="Miktar" data-path="${basePath}.ogunler.${k}.miktar" value="${esc(getPath(form,basePath+'.ogunler.'+k+'.miktar'))}">
+      </div></div>`).join('');
+}
+function tplBesin(){
+  const items = form.besinKayitlari.map((g,i)=>{
+    const base = `besinKayitlari.${i}`;
+    return `<div class="block">
+      <button class="btn danger small rm" data-rm="besinKayitlari" data-idx="${i}">Sil</button>
+      <h4>Gün ${i+1}</h4>
+      <div class="grid3">
+        ${inp(base+'.gun','date','Tarih')} ${inp(base+'.boy','text','Boyu')} ${inp(base+'.kilo','text','Kilosu')}
+        ${inp(base+'.cinsiyet','text','Cinsiyeti')} ${inp(base+'.su','text','Tüketilen Su (bardak)')}
+      </div>
+      ${ogunFields(base)}
+    </div>`;
+  }).join('');
+  return `<div class="card"><h2>24 Saatlik Yiyecek / İçecek Tüketim Kaydı</h2>
+    <p class="hint">Vakanızın günlük besin tüketim kaydını ardışık 3 gün için ayrı ayrı ekleyiniz.</p>
+    ${items || '<p class="hint">Henüz gün eklenmedi.</p>'}
+    <button class="btn ghost small" data-add="besinKayitlari" data-factory="besinGun">+ Gün Ekle</button>
+  </div>`;
+}
+
+function tplBakim(){
+  const items = form.bakimPlanlari.map((p,i)=>{
+    const base = `bakimPlanlari.${i}`;
+    return `<div class="block"><button class="btn danger small rm" data-rm="bakimPlanlari" data-idx="${i}">Sil</button>
+      <div class="grid">
+        ${inp(base+'.tani','textarea','Hemşirelik Tanısı / Neden-Sebep (etiyolojik faktör)')}
+        ${inp(base+'.amac','textarea','Amaç ve Hedefler (Kısa - Uzun Vadeli)')}
+        ${inp(base+'.girisim','textarea','Hemşirelik Girişimleri')}
+        ${inp(base+'.degerlendirme','textarea','Değerlendirme Kriterleri')}
+      </div></div>`;
+  }).join('');
+  return `<div class="card"><h2>Birey Bakım Planı</h2>
+    <p class="hint">Gerektiği kadar bakım planı ekleyebilirsiniz.</p>
+    ${items || '<p class="hint">Henüz bakım planı eklenmedi.</p>'}
+    <button class="btn ghost small" data-add="bakimPlanlari" data-factory="bakimPlani">+ Bakım Planı Ekle</button>
+  </div>`;
+}
+
+function alanBlock(title, path, items, guiText){
+  const rows = items.map(([k,label])=>chk(`toplumTanilama.${path}.${k}`,label)).join('');
+  return `<h4>${title}</h4><div class="chk-grid">${rows}</div>${inp(`toplumTanilama.${path}.guclu`,'textarea',guiText||'Bu alana ilişkin gözlenen güçlü yönler')}`;
+}
+function tplToplum(){
+  const t = form.toplumTanilama;
+  return `<div class="card"><h2>Toplum Tanılama Değerlendirme Formu</h2>
+    <div class="grid3">
+      ${inp('toplumTanilama.ogrenciAdi','text','Tanılama Yapan Öğrenci Adı Soyadı')}
+      ${inp('toplumTanilama.postaKodu','text','Posta Kodu')}
+      ${inp('toplumTanilama.adi','text','Toplumun / Bölgenin Adı')}
+    </div>
+    <div class="grid3">
+      ${inp('toplumTanilama.konum','text','Konum (enlem - boylam)')}
+      ${inp('toplumTanilama.alani','text','Alanı (km²)')}
+      <div class="field"><label>Nüfus Büyüklüğü</label><select data-path="toplumTanilama.nufus">
+        <option value=""></option>
+        ${["1000 kişi altında","1000-10.000","10.001-25.000","25.001-50.000","50.001-100.000","100.001 ve üstü"].map(o=>`<option ${t.nufus===o?'selected':''}>${o}</option>`).join('')}
+      </select></div>
+    </div>
+    <h3>Çevresel Alan</h3>
+    ${alanBlock('Konut (Yaşam Alanı)','konut',[['yapiselSorun','Yapısal olarak sağlam olmaması'],['evsiz','Evsiz']])}
+    ${alanBlock('Mahalle / İş Yeri Güvenliği','guvenlik',[['suc','Suç oranının yüksek olması'],['kirlilik','Kirlilik düzeyinin yüksek olması'],['oyunAlani','Oyun/egzersiz alanlarının yetersiz olması'],['kaynakYetersiz','Sağlığı teşvik kaynaklarının yetersiz olması'],['siddet','Şiddetle ilgili tehdit/ihbarlar'],['fiziksel','Fiziksel tehlikeler'],['trafik','Araç/trafik tehlikeleri'],['kimyasal','Kimyasal tehlikeler'],['radyasyon','Radyasyon tehlikesi']])}
+    ${alanBlock('Sanitasyon','sanitasyon',[['bocek','Böcek/kemiricilerin olması'],['suYetersiz','Su sağlamada yetersizlik'],['kanalizasyon','Kanalizasyon sisteminde yetersizlik']])}
+    ${alanBlock('Gelir','gelir',[['dusuk','Gelirin düşük olması/hiç olmaması'],['satinalmaGucluk','Gereksinimleri satın almada güçlük'],['saglikGuvenceYok','Sağlık güvencesinin olmaması']])}
+    <h3>Sağlık Davranışları Alanı</h3>
+    ${alanBlock('Beslenme','beslenme',[['dengesiz','Dengesiz beslenme'],['fazlaKilo','Fazla kilo'],['dusukKilo','Düşük kilo']])}
+    ${alanBlock('Madde Kullanımı','madde',[['uyarici','Uyarıcı/uyuşturucu/sokakta satılan madde kullanımı'],['alkol','Alkolün kötüye kullanımı'],['sigara','Sigara/tütün ürünü kullanımı'],['dumanMaruz','Sigara-puro dumanına maruz kalma'],['yasadisi','Yasal olmayan madde alma/satma']])}
+    ${alanBlock('Sağlık Bakım Denetimi','saglikBakimDenetimi',[['sureksizlik','Sağlık bakım kaynaklarının sürekliliğinin olmaması'],['yetersizlik','Sağlık bakım kaynaklarının yetersiz olması']])}
+    <h3>Psikososyal Alan</h3>
+    ${alanBlock('Toplum Kaynakları ile İletişim','toplumKaynaklariIletisim',[['kaynakYok','Kaynakların olmaması/yetersiz olması'],['dilEngeli','Dil engeli'],['kulturelEngel','Kültürel engeller'],['egitimEngel','Eğitimsel engeller'],['ulasimEngeli','Ulaşım engelleri'],['sinirliErisim','Bakım/hizmet/malzemelere sınırlı erişim']])}
+    ${alanBlock('Sosyal Etkileşim','sosyalEtkilesim',[['sinirli','Sınırlı sosyal etkileşim'],['azAktivite','Dış uyaran/boş zaman aktivitelerinin az olması']])}
+    ${alanBlock('Kişilerarası İlişkiler','kisilerarasi',[['gucluk','İlişki kurma/sürdürmede güçlük'],['gerginlik','Uzun süren, düzelmeyen gerginlik']])}
+    ${alanBlock('Maneviyat','maneviyat',[['endise','Maneviyatla ilgili endişelerini ifade etme'],['catisma','Tıbbi uygulamalarla dini inançların çatışması']])}
+    <h3>Windshield Gözlem ve Genel Notlar</h3>
+    ${inp('toplumTanilama.windshield','textarea','Windshield gözlem bulguları (bina/yapılar, açık alanlar, bölge sınırları, ortak alanlar, ulaşım, hizmet merkezleri, mağazalar, sokaktaki insanlar, harabiyet, ırk-etnik yapı, din/inanç, sağlık-hastalık, politikalar, medya vb.)')}
+    ${inp('toplumTanilama.yorumlar','textarea','Yorumlar / Belirtmek istediğiniz diğer konular')}
+  </div>`;
+}
+
+function tplTarama(){
+  const t = form.tarama;
+  const takvim = form.taramaTakvimi.map((r,i)=>`<tr>
+    <td><input type="text" data-path="taramaTakvimi.${i}.sinifSube" value="${esc(r.sinifSube)}"></td>
+    <td><input type="text" data-path="taramaTakvimi.${i}.mevcut" value="${esc(r.mevcut)}"></td>
+    <td><input type="text" data-path="taramaTakvimi.${i}.gunler" value="${esc(r.gunler)}" placeholder="Gün tarihleri"></td>
+    <td><button class="btn danger small" data-rm="taramaTakvimi" data-idx="${i}">Sil</button></td></tr>`).join('');
+  const sonuc = form.taramaSonuclari.map((r,i)=>{
+    const base=`taramaSonuclari.${i}`;
+    const cols=['adSoyad','yas','boy','kilo','bki','bkiPersentil','kanBasinci','kbPersentil','parazit','degerlendirme'];
+    return `<tr>${cols.map(c=>`<td><input type="text" data-path="${base}.${c}" value="${esc(r[c])}"></td>`).join('')}<td><button class="btn danger small" data-rm="taramaSonuclari" data-idx="${i}">Sil</button></td></tr>`;
+  }).join('');
+  const gorme = form.gormeTaramasi.map((r,i)=>{
+    const base=`gormeTaramasi.${i}`;
+    const cols=['adSoyad','gozSag','gozSol','gozIki','gozluksuzSag','gozluksuzSol','gozluksuzIki','dusunceler'];
+    return `<tr>${cols.map(c=>`<td><input type="text" data-path="${base}.${c}" value="${esc(r[c])}"></td>`).join('')}<td><button class="btn danger small" data-rm="gormeTaramasi" data-idx="${i}">Sil</button></td></tr>`;
+  }).join('');
+  return `<div class="card"><h2>Tarama Programı Plan ve Kayıt Formu</h2>
+    <div class="grid3">
+      ${inp('tarama.adi','text','Tarama Programının Adı')} ${inp('tarama.tarih','date','Tarihi')} ${inp('tarama.yer','text','Yeri')}
+      ${inp('tarama.sure','text','Süresi')} ${inp('tarama.aracGerec','text','Kullanılacak Araç-Gereçler')} ${inp('tarama.sayi','number','Tarama Yapılacak Kişi Sayısı')}
+    </div>
+    ${inp('tarama.destekKurulus','text','Destek Olacak / İşbirliği Yapılacak Kişi(ler) ve Kuruluşlar')}
+    <div class="grid3">
+      ${inp('tarama.riskli','number','Riskli Bulunan Kişi Sayısı')} ${inp('tarama.sevk','number','Sevk Edilen Kişi Sayısı')}
+      ${inp('tarama.danisma','number','Danışmanlık/Rehberlik Yapılan Kişi Sayısı')}
+    </div>
+    ${inp('tarama.izlem','number','İzleme Alınan Kişi Sayısı')}
+
+    <h3>Okulu Tarama Takvimi (isteğe bağlı)</h3>
+    <div class="overflow-x"><table class="small-table"><tr><th>Sınıf/Şube</th><th>Sınıf Mevcudu</th><th>Gün Tarihleri</th><th></th></tr>${takvim}</table></div>
+    <button class="btn ghost small" data-add="taramaTakvimi" data-factory="taramaTakvim" style="margin-top:8px">+ Satır Ekle</button>
+
+    <h3>Tarama Sonuçları</h3>
+    <div class="overflow-x"><table class="small-table"><tr><th>Ad-Soyad</th><th>Yaş</th><th>Boy</th><th>Kilo</th><th>BKİ</th><th>BKİ Persentil</th><th>Kan Basıncı</th><th>KB Persentil</th><th>Parazit</th><th>Değerlendirme</th><th></th></tr>${sonuc}</table></div>
+    <button class="btn ghost small" data-add="taramaSonuclari" data-factory="taramaSonuc" style="margin-top:8px">+ Satır Ekle</button>
+
+    <h3>Görme Taraması Sonuçları</h3>
+    <div class="overflow-x"><table class="small-table"><tr><th>Ad-Soyad</th><th>Gözlüklü Sağ</th><th>Gözlüklü Sol</th><th>Gözlüklü İki</th><th>Gözlüksüz Sağ</th><th>Gözlüksüz Sol</th><th>Gözlüksüz İki</th><th>Düşünceler</th><th></th></tr>${gorme}</table></div>
+    <button class="btn ghost small" data-add="gormeTaramasi" data-factory="gormeTaramasi" style="margin-top:8px">+ Satır Ekle</button>
+  </div>`;
+}
+
+function tplEgitim(){
+  return `<div class="card"><h2>Sağlık Eğitimi Formu</h2>
+    <div class="grid">
+      ${inp('saglikEgitimi.konu','text','Konu')} ${inp('saglikEgitimi.hedefGrup','text','Hedef Grup')}
+      ${inp('saglikEgitimi.yerSure','text','Yer ve Süre')} ${inp('saglikEgitimi.katilimci','number','Programa Katılan Kişi Sayısı')}
+      ${inp('saglikEgitimi.danismaSayisi','number','Danışmanlık/Rehberlik Yapılan Kişi Sayısı')} ${inp('saglikEgitimi.izlemSayisi','number','İzleme Alınan Kişi Sayısı')}
+    </div>
+    ${inp('saglikEgitimi.amac','textarea','Amaç')}
+    <h3>Hedefler</h3>
+    <div class="grid3">
+      ${inp('saglikEgitimi.bilissel','textarea','Bilişsel')} ${inp('saglikEgitimi.duyussal','textarea','Duyuşsal')} ${inp('saglikEgitimi.psikomotor','textarea','Psikomotor')}
+    </div>
+    ${inp('saglikEgitimi.giris','textarea','Giriş Bölümü (süre / yöntem / araç-gereç)')}
+    ${inp('saglikEgitimi.govde','textarea','Gövde Bölümü (süre / yöntem / araç-gereç)')}
+    ${inp('saglikEgitimi.sonuc','textarea','Sonuç Bölümü (süre / yöntem / araç-gereç)')}
+    ${inp('saglikEgitimi.dagitilanMateryal','text','Dağıtılan Materyal')}
+    <h3>Sağlık Eğitimi İçeriği ve Materyalleri</h3>
+    ${inp('saglikEgitimi.icerikBaslik','text','Eğitimin Ana ve Ara Başlıkları')}
+    ${inp('saglikEgitimi.icerik','textarea','Eğitimin İçeriği')}
+    ${inp('saglikEgitimi.kaynaklar','textarea','Kullanılan Kaynaklar')}
+  </div>`;
+}
+
+function tplUniversite(){
+  const u = form.universiteProgrami;
+  const basamaklar = u.surecBasamaklari.map((b,i)=>`<div class="list-row" style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+    <span class="hint" style="min-width:18px">${i+1}.</span>
+    <input type="text" style="flex:1" data-path="universiteProgrami.surecBasamaklari.${i}.metin" value="${esc(b.metin)}">
+    <button class="btn danger small" data-rm="universiteProgrami.surecBasamaklari" data-idx="${i}">Sil</button></div>`).join('');
+  return `<div class="card"><h2>Üniversite Grubu Sağlığı Koruma/Geliştirme Programı Planlama ve Değerlendirme Formu</h2>
+    <div class="grid">
+      ${inp('universiteProgrami.adi','text','Programın Adı')} ${inp('universiteProgrami.ekip','text','Program Yönetim Ekibi (Grup)')}
+      <div class="field"><label>Programın Düzeyi</label><select data-path="universiteProgrami.duzey">
+        <option value=""></option><option ${u.duzey==='Sağlığı Geliştirme'?'selected':''}>Sağlığı Geliştirme</option>
+        <option ${u.duzey==='Sağlığı Koruma'?'selected':''}>Sağlığı Koruma</option></select></div>
+      ${inp('universiteProgrami.hedefKitle','text','Hedef Kitle ve Sınıf Düzeyi')}
+    </div>
+    ${inp('universiteProgrami.amac','textarea','Programın Amacı')}
+    ${inp('universiteProgrami.hedefler','textarea','Programın Hedefleri')}
+    ${inp('universiteProgrami.tanilama','textarea','Program Tanılama')}
+    ${inp('universiteProgrami.planlama','textarea','Programın Planlanması ve Ön Hazırlık')}
+    <div class="grid">
+      ${inp('universiteProgrami.danismaKurulu','text','Danışma (Uzman) Kurulu')} ${inp('universiteProgrami.tarihSure','text','Tarih ve Süre')}
+      ${inp('universiteProgrami.aracGerec','text','Araç-Gereçler')}
+    </div>
+    <h3>Süreç (Uygulama Basamakları)</h3>
+    ${basamaklar || '<p class="hint">Henüz basamak eklenmedi.</p>'}
+    <button class="btn ghost small" data-add="universiteProgrami.surecBasamaklari" data-factory="surecBasamagi">+ Basamak Ekle</button>
+    <div style="margin-top:14px">
+    ${inp('universiteProgrami.kaynaklar','textarea','Program Kaynakları')}
+    ${inp('universiteProgrami.duyuru','textarea','Programın Duyurulması')}
+    ${inp('universiteProgrami.degerlendirme','textarea','Program Kazanımlarının Değerlendirilmesi (Süreç, Etki, Sonuç)')}
+    ${inp('universiteProgrami.gucluk','textarea','Program ile İlgili Yaşanan Güçlükler')}
+    ${inp('universiteProgrami.gorevDagilimi','textarea','Programa İlişkin Görev Dağılımı')}
+    ${inp('universiteProgrami.notlar','textarea','Diğer Notlar')}
+    </div>
+  </div>`;
+}
+
+function tplGunluk(){
+  const rows = form.gunluk.map((g,i)=>`<div class="block">
+    <button class="btn danger small rm" data-rm="gunluk" data-idx="${i}">Sil</button>
+    <div class="grid">
+      <div class="field"><label>Tarih</label><input type="date" data-path="gunluk.${i}.tarih" value="${esc(g.tarih)}"></div>
+      <div class="field"><label>Notlar</label><textarea data-path="gunluk.${i}.not">${esc(g.not)}</textarea></div>
+    </div></div>`).join('');
+  return `<div class="card"><h2>Öğrenci Uygulama Günlüğü</h2>
+    <p class="hint">Tüm uygulama alanlarında günlük yaptığınız tüm faaliyetleri (toplum sağlığı, okul sağlığı, sağlık eğitimi, kurum içi uygulamalar), vaka alınan gün ve devamsızlıkları tarihi ile belirtiniz.</p>
+    ${rows || '<p class="hint">Henüz kayıt eklenmedi.</p>'}
+    <button class="btn ghost small" data-add="gunluk" data-factory="gunluk">+ Günlük Kaydı Ekle</button>
+  </div>`;
+}
+
+// ---------- delegated events (bound once) ----------
+document.addEventListener('input', (e)=>{
+  const p = e.target.dataset && e.target.dataset.path;
+  if(!p) return;
+  if(e.target.dataset.ensure){ /* handled in change for checkbox */ }
+  if(e.target.type==='checkbox') return; // handled by change
+  setPath(form, p, e.target.value);
+});
+document.addEventListener('change', (e)=>{
+  const p = e.target.dataset && e.target.dataset.path;
+  if(!p) return;
+  if(e.target.type==='checkbox'){
+    if(e.target.dataset.ensure && !getPath(form,e.target.dataset.ensure)) setPath(form,e.target.dataset.ensure,{});
+    setPath(form, p, e.target.checked);
+  } else if(e.target.tagName==='SELECT'){
+    setPath(form, p, e.target.value);
+  }
+});
+document.addEventListener('click', (e)=>{
+  const addPath = e.target.dataset && e.target.dataset.add;
+  if(addPath){
+    const factory = BLANK_FACTORIES[e.target.dataset.factory];
+    const arr = getPath(form, addPath);
+    arr.push(factory());
+    renderTabContent();
+    return;
+  }
+  const rmPath = e.target.dataset && e.target.dataset.rm;
+  if(rmPath){
+    const arr = getPath(form, rmPath);
+    arr.splice(+e.target.dataset.idx, 1);
+    renderTabContent();
+    return;
+  }
+});
+
+function attachTopHandlers(){
+  document.querySelectorAll('[data-go]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const g = el.dataset.go;
+      if(g==='student'){ if(!form.id && !form._started){ form = blankStudentForm(); } form._started=true; form._tab = form._tab||'bilgi'; state.view='student'; }
+      else { state.view=g; }
+      render();
+    });
+  });
+  document.querySelectorAll('[data-tab]').forEach(el=>{
+    el.addEventListener('click', ()=>{ form._tab = el.dataset.tab; render(); });
+  });
+  document.getElementById('doLogin')?.addEventListener('click', async ()=>{
+    const u = document.getElementById('fu').value.trim();
+    const p = document.getElementById('fp').value.trim();
+    if(u===FACULTY_USER && p===FACULTY_PASS){
+      facultyAuthed = true;
+      await loadSubmissions();
+      state.view='faculty-panel'; render();
+    } else {
+      document.getElementById('loginMsg').innerHTML = '<div class="msg err">Kullanıcı adı veya şifre hatalı.</div>';
+    }
+  });
+  document.getElementById('submitBtn')?.addEventListener('click', submitStudentForm);
+  document.getElementById('printBtn')?.addEventListener('click', printStudentAll);
+  document.querySelectorAll('[data-open]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.detailId = el.dataset.open; state.view='faculty-detail'; render(); });
+  });
+  document.querySelectorAll('[data-del]').forEach(el=>{
+    el.addEventListener('click', (e)=>{ e.stopPropagation(); deleteSubmission(el.dataset.del); });
+  });
+}
+
+async function submitStudentForm(){
+  const hint = document.getElementById('saveHint');
+  if(!form.ad || !form.no){
+    hint.textContent = 'Lütfen adınızı ve öğrenci numaranızı giriniz (Bilgiler sekmesi).';
+    hint.style.color = 'var(--danger)';
+    form._tab='bilgi'; render();
+    return;
+  }
+  form.submittedAt = Date.now();
+  form.status = 'yeni';
+  const id = form.id || ('sub_' + Date.now() + '_' + Math.random().toString(36).slice(2,7));
+  form.id = id;
+  hint.textContent = 'Gönderiliyor...'; hint.style.color = 'var(--sub)';
+  try{
+    if(Storage.backend!=='none'){
+      const clean = JSON.parse(JSON.stringify(form));
+      delete clean._tab; delete clean._started;
+      await Storage.setSubmission(id, clean);
+      hint.textContent = 'Dosyanız akademisyene iletildi. Teşekkürler!'; hint.style.color = 'var(--accent-d)';
+    } else {
+      hint.textContent = 'Google Sheets bağlantısı kurulamadı. SHEETS_WEBAPP_URL alanını kontrol edin.'; hint.style.color = 'var(--danger)';
+    }
+  }catch(e){
+    hint.textContent = 'Gönderim sırasında hata oluştu.'; hint.style.color = 'var(--danger)';
+  }
+}
+
+async function loadSubmissions(){
+  submissions = [];
+  try{
+    submissions = await Storage.getSubmissions();
+    submissions.sort((a,b)=> (b.submittedAt||0)-(a.submittedAt||0));
+  }catch(e){ submissions = []; }
+}
+
+function renderFacultyPanel(){
+  const rows = submissions.length ? submissions.map(s=>`
+    <div class="subm-item">
+      <div data-open="${s.id}" style="flex:1;cursor:pointer"><strong>${esc(s.ad)||'(isimsiz)'}</strong> — No: ${esc(s.no)||'-'}<br>
+      <span class="hint">${s.submittedAt ? new Date(s.submittedAt).toLocaleString('tr-TR') : ''}</span></div>
+      <span class="status ${s.status==='degerlendirildi'?'graded':'new'}">${s.status==='degerlendirildi'?'Değerlendirildi':'Yeni'}</span>
+      <button class="btn danger small" data-del="${s.id}">Sil</button>
+    </div>`).join('') : '<p class="hint">Henüz iletilen bir dosya bulunmuyor.</p>';
+  return `<header class="top"><div><h1>Akademisyen Paneli<br><small>Halk Sağlığı Hemşireliği</small></h1></div>
+  <button class="btn ghost small" data-go="home">Çıkış</button></header>
+  <div class="wrap"><div class="card"><h2>İletilen Öğrenci Dosyaları</h2>
+  <p class="hint">Bir dosyaya tıklayarak inceleyin ve değerlendirme puanlarını girin.</p>${rows}</div></div>`;
+}
+
+function dumpObj(o){
+  return esc(JSON.stringify(o||{},null,1)).replace(/[{}"]/g,'').replace(/,\n/g,'\n').trim() || '-';
+}
+function renderFacultyDetail(){
+  const s = submissions.find(x=>x.id===state.detailId);
+  if(!s) return renderFacultyPanel();
+  const g = s.grade || {};
+  return `<header class="top"><div><h1>Değerlendirme<br><small>${esc(s.ad)} — ${esc(s.no)}</small></h1></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn ghost small" id="printFacultyBtn">PDF Olarak İndir</button>
+  <button class="btn danger small" data-del="${s.id}">Kaydı Sil</button>
+  <button class="btn ghost small" data-go="faculty-panel">Panele Dön</button>
+  </div></header>
+  <div class="wrap">
+    <div class="print-header"><h2>Halk Sağlığı Hemşireliği Dersi — Öğrenci Uygulama Değerlendirme Dosyası</h2>
+    <p>${esc(s.ad)} — No: ${esc(s.no)} — Yazdırma Tarihi: ${new Date().toLocaleDateString('tr-TR')}</p></div>
+    <div class="card">
+      <h2>Öğrenci Bilgileri</h2>
+      <div class="grid">
+        <div><label>Adı Soyadı</label><div class="readonly-box">${esc(s.ad)}</div></div>
+        <div><label>Numara</label><div class="readonly-box">${esc(s.no)}</div></div>
+        <div><label>Uygulama Alanı 1</label><div class="readonly-box">${esc(s.alan1)}</div></div>
+        <div><label>Uygulama Alanı 2</label><div class="readonly-box">${esc(s.alan2)}</div></div>
+      </div>
+      <h3>Vaka - Sağlık Bilgi Formu</h3><div class="readonly-box">${dumpObj(s.vaka)}</div>
+      <h3>24 Saatlik Besin Kaydı (${(s.besinKayitlari||[]).length} gün)</h3>
+      ${(s.besinKayitlari||[]).map((b,i)=>`<div class="readonly-box">Gün ${i+1}: ${dumpObj(b)}</div>`).join('') || '<p class="hint">Yok</p>'}
+      <h3>Bakım Planları (${(s.bakimPlanlari||[]).length})</h3>
+      ${(s.bakimPlanlari||[]).map((p,i)=>`<div class="readonly-box"><strong>Plan ${i+1}</strong>\nTanı: ${esc(p.tani)}\nAmaç: ${esc(p.amac)}\nGirişim: ${esc(p.girisim)}\nDeğerlendirme: ${esc(p.degerlendirme)}</div>`).join('') || '<p class="hint">Yok</p>'}
+      <h3>Toplum Tanılama</h3><div class="readonly-box">${dumpObj(s.toplumTanilama)}</div>
+      <h3>Tarama Programı</h3><div class="readonly-box">${dumpObj(s.tarama)}</div>
+      <h3>Tarama Sonuçları (${(s.taramaSonuclari||[]).length}) / Görme Taraması (${(s.gormeTaramasi||[]).length})</h3>
+      <div class="readonly-box">${dumpObj({sonuclar:s.taramaSonuclari, gorme:s.gormeTaramasi})}</div>
+      <h3>Sağlık Eğitimi</h3><div class="readonly-box">${dumpObj(s.saglikEgitimi)}</div>
+      <h3>Üniversite Programı</h3><div class="readonly-box">${dumpObj(s.universiteProgrami)}</div>
+      <h3>Uygulama Günlüğü (${(s.gunluk||[]).length} kayıt)</h3>
+      ${(s.gunluk||[]).map(g=>`<div class="readonly-box">${esc(g.tarih)} — ${esc(g.not)}</div>`).join('') || '<p class="hint">Yok</p>'}
+    </div>
+    <div class="card">
+      <h2>Öğrenci Uygulama Değerlendirme Formu</h2>
+      <p class="hint">Aşağıdaki tablo danışmanlık yapan öğretim elemanı tarafından doldurulur.</p>
+      <table class="eval">
+        <tr><th>Değerlendirme Kriterleri</th><th>Ağırlık</th><th>Not 1</th><th>Not 2</th></tr>
+        ${EVAL_CRITERIA.map(([key,label,weight,items])=>`
+        <tr><td><strong>${label}</strong><br><span class="hint">${items.map(it=>'- '+it).join('<br>')}</span></td>
+        <td>${weight}</td>
+        <td><input type="number" min="0" max="100" id="p_${key}_1" value="${(g[key]&&g[key].not1)??''}"></td>
+        <td><input type="number" min="0" max="100" id="p_${key}_2" value="${(g[key]&&g[key].not2)??''}"></td></tr>`).join('')}
+      </table>
+      <div class="grid" style="margin-top:14px">
+        <div class="field"><label>Tarih</label><input type="date" id="p_tarih" value="${esc(g.tarih_form||'')}"></div>
+        <div class="field"><label>Değerlendirmeyi Yapan Öğretim Elemanı</label><input type="text" id="p_degerlendiren" value="${esc(g.degerlendiren||'')}"></div>
+      </div>
+      <div class="field"><label>Notlar</label><textarea id="p_notlar">${esc(g.notlar||'')}</textarea></div>
+      <p>UYGULAMA NOTU (Not1-Not2 ortalaması, ağırlıklı): <span class="toplam" id="toplamGoster">${g.toplam ?? '-'}</span></p>
+
+      <h3>Uygulama Dosyası Kontrol Listesi</h3>
+      <div class="overflow-x"><table class="small-table">
+      <tr><th>Grup</th><th>Dosya İçeriği</th><th>Var/Yok</th><th>Açıklama</th></tr>
+      ${CHECKLIST_ITEMS.map(([grp,label],i)=>{
+        const cur = (g.checklist && g.checklist[i]) || {};
+        return `<tr><td>${grp}</td><td>${label}</td>
+        <td><select id="c_${i}_d"><option value=""></option><option ${cur.durum==='VAR'?'selected':''}>VAR</option><option ${cur.durum==='YOK'?'selected':''}>YOK</option></select></td>
+        <td><input type="text" id="c_${i}_a" value="${esc(cur.aciklama||'')}"></td></tr>`;
+      }).join('')}
+      </table></div>
+      <div class="field" style="margin-top:10px"><label>Dosyayı Teslim Alan Öğretim Elemanı</label><input type="text" id="p_teslimAlan" value="${esc(g.teslimAlan||'')}"></div>
+
+      <div id="gradeMsg" style="margin-top:12px"></div>
+      <button class="btn" id="saveGrade">Değerlendirmeyi Kaydet</button>
+    </div>
+  </div>`;
+}
+function calcToplam(){
+  let toplam = 0;
+  EVAL_CRITERIA.forEach(([key,label,weight])=>{
+    const n1 = +(document.getElementById('p_'+key+'_1')?.value||0);
+    const n2 = +(document.getElementById('p_'+key+'_2')?.value||0);
+    const w = parseFloat(weight)/100;
+    toplam += ((n1+n2)/2) * w;
+  });
+  const el = document.getElementById('toplamGoster'); if(el) el.textContent = toplam.toFixed(1);
+  return toplam;
+}
+function bindGradeHandlers(){
+  document.querySelectorAll('table.eval input').forEach(inpEl=>inpEl.addEventListener('input',calcToplam));
+  document.getElementById('saveGrade')?.addEventListener('click', saveGrade);
+  document.getElementById('printFacultyBtn')?.addEventListener('click', ()=>window.print());
+}
+async function saveGrade(){
+  const s = submissions.find(x=>x.id===state.detailId);
+  if(!s) return;
+  const toplam = calcToplam();
+  const grade = { degerlendiren: document.getElementById('p_degerlendiren').value, notlar: document.getElementById('p_notlar').value,
+    tarih_form: document.getElementById('p_tarih').value, teslimAlan: document.getElementById('p_teslimAlan').value,
+    toplam:+toplam.toFixed(1), tarih:new Date().toISOString(), checklist:{} };
+  EVAL_CRITERIA.forEach(([key])=>{
+    grade[key] = { not1:+(document.getElementById('p_'+key+'_1').value||0), not2:+(document.getElementById('p_'+key+'_2').value||0) };
+  });
+  CHECKLIST_ITEMS.forEach((item,i)=>{
+    grade.checklist[i] = { durum: document.getElementById('c_'+i+'_d').value, aciklama: document.getElementById('c_'+i+'_a').value };
+  });
+  s.grade = grade;
+  s.status = 'degerlendirildi';
+  const msg = document.getElementById('gradeMsg');
+  msg.innerHTML = '<div class="msg">Kaydediliyor...</div>';
+  try{ await Storage.setSubmission(s.id, s); msg.innerHTML = '<div class="msg ok">Değerlendirme kaydedildi.</div>'; }
+  catch(e){ msg.innerHTML = '<div class="msg err">Kaydetme sırasında hata oluştu.</div>'; }
+}
+async function deleteSubmission(id){
+  if(!confirm('Bu öğrenci dosyasını kalıcı olarak silmek istediğinize emin misiniz?')) return;
+  try{
+    await Storage.deleteSubmission(id);
+    submissions = submissions.filter(x=>x.id!==id);
+    state.view='faculty-panel'; render();
+  }catch(e){ alert('Silme sırasında hata oluştu.'); }
+}
+
+(async function start(){ await initCapabilities(); render(); })();
+</script>
+</body>
+</html>
