@@ -566,12 +566,14 @@ function tplTarama(){
   const sonuc = form.taramaSonuclari.map((r,i)=>{
     const base=`taramaSonuclari.${i}`;
     const cols=['adSoyad','yas','boy','kilo','bki','bkiPersentil','kanBasinci','kbPersentil','parazit','degerlendirme'];
-    return `<tr>${cols.map(c=>`<td><input type="text" data-path="${base}.${c}" value="${esc(r[c])}"></td>`).join('')}<td><button class="btn danger small" data-rm="taramaSonuclari" data-idx="${i}">Sil</button></td></tr>`;
+    return `<tr><td style="text-align:center;color:var(--sub)">${i+1}</td>${cols.map(c=> c==='bki'
+      ? `<td><input type="text" data-path="${base}.bki" value="${esc(r.bki)}" readonly placeholder="otomatik" title="Boy ve kilodan otomatik hesaplanır" style="background:var(--chip);font-weight:600"></td>`
+      : `<td><input type="text" data-path="${base}.${c}" value="${esc(r[c])}" ${c==='boy'?'placeholder="cm"':c==='kilo'?'placeholder="kg"':''}></td>`).join('')}<td><button class="btn danger small" data-rm="taramaSonuclari" data-idx="${i}">Sil</button></td></tr>`;
   }).join('');
   const gorme = form.gormeTaramasi.map((r,i)=>{
     const base=`gormeTaramasi.${i}`;
     const cols=['adSoyad','gozSag','gozSol','gozIki','gozluksuzSag','gozluksuzSol','gozluksuzIki','dusunceler'];
-    return `<tr>${cols.map(c=>`<td><input type="text" data-path="${base}.${c}" value="${esc(r[c])}"></td>`).join('')}<td><button class="btn danger small" data-rm="gormeTaramasi" data-idx="${i}">Sil</button></td></tr>`;
+    return `<tr><td style="text-align:center;color:var(--sub)">${i+1}</td>${cols.map(c=>`<td><input type="text" data-path="${base}.${c}" value="${esc(r[c])}"></td>`).join('')}<td><button class="btn danger small" data-rm="gormeTaramasi" data-idx="${i}">Sil</button></td></tr>`;
   }).join('');
   return `<div class="card"><h2>Tarama Programı Plan ve Kayıt Formu</h2>
     <div class="grid3">
@@ -590,12 +592,20 @@ function tplTarama(){
     <button class="btn ghost small" data-add="taramaTakvimi" data-factory="taramaTakvim" style="margin-top:8px">+ Satır Ekle</button>
 
     <h3>Tarama Sonuçları</h3>
-    <div class="overflow-x"><table class="small-table"><tr><th>Ad-Soyad</th><th>Yaş</th><th>Boy</th><th>Kilo</th><th>BKİ</th><th>BKİ Persentil</th><th>Kan Basıncı</th><th>KB Persentil</th><th>Parazit</th><th>Değerlendirme</th><th></th></tr>${sonuc}</table></div>
-    <button class="btn ghost small" data-add="taramaSonuclari" data-factory="taramaSonuc" style="margin-top:8px">+ Satır Ekle</button>
+    <div class="overflow-x"><table class="small-table"><tr><th style="width:30px">#</th><th>Ad-Soyad</th><th>Yaş</th><th>Boy (cm)</th><th>Kilo (kg)</th><th>BKİ (otomatik)</th><th>BKİ Persentil</th><th>Kan Basıncı</th><th>KB Persentil</th><th>Parazit</th><th>Değerlendirme</th><th></th></tr>${sonuc}</table></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
+    <button class="btn ghost small" data-add="taramaSonuclari" data-factory="taramaSonuc">+ Satır Ekle</button>
+    <button class="btn ghost small" data-add="taramaSonuclari" data-factory="taramaSonuc" data-count="10">+ 10 Satır Ekle</button>
+    <button class="btn ghost small" data-add="taramaSonuclari" data-factory="taramaSonuc" data-fillto="60">60 Satıra Tamamla</button>
+    <span class="hint" style="margin:0">Toplam: ${form.taramaSonuclari.length} kişi</span></div>
 
     <h3>Görme Taraması Sonuçları</h3>
-    <div class="overflow-x"><table class="small-table"><tr><th>Ad-Soyad</th><th>Gözlüklü Sağ</th><th>Gözlüklü Sol</th><th>Gözlüklü İki</th><th>Gözlüksüz Sağ</th><th>Gözlüksüz Sol</th><th>Gözlüksüz İki</th><th>Düşünceler</th><th></th></tr>${gorme}</table></div>
-    <button class="btn ghost small" data-add="gormeTaramasi" data-factory="gormeTaramasi" style="margin-top:8px">+ Satır Ekle</button>
+    <div class="overflow-x"><table class="small-table"><tr><th style="width:30px">#</th><th>Ad-Soyad</th><th>Gözlüklü Sağ</th><th>Gözlüklü Sol</th><th>Gözlüklü İki</th><th>Gözlüksüz Sağ</th><th>Gözlüksüz Sol</th><th>Gözlüksüz İki</th><th>Düşünceler</th><th></th></tr>${gorme}</table></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
+    <button class="btn ghost small" data-add="gormeTaramasi" data-factory="gormeTaramasi">+ Satır Ekle</button>
+    <button class="btn ghost small" data-add="gormeTaramasi" data-factory="gormeTaramasi" data-count="10">+ 10 Satır Ekle</button>
+    <button class="btn ghost small" data-add="gormeTaramasi" data-factory="gormeTaramasi" data-fillto="60">60 Satıra Tamamla</button>
+    <span class="hint" style="margin:0">Toplam: ${form.gormeTaramasi.length} kişi</span></div>
   </div>`;
 }
 
@@ -679,7 +689,23 @@ document.addEventListener('input', (e)=>{
   if(e.target.dataset.ensure){ /* handled in change for checkbox */ }
   if(e.target.type==='checkbox') return; // handled by change
   setPath(form, p, e.target.value);
+  const m = p.match(/^taramaSonuclari\.(\d+)\.(boy|kilo)$/);
+  if(m) updateBKI(+m[1]);
 });
+function parseNum(v){ const n = parseFloat(String(v||'').replace(',','.').replace(/[^0-9.]/g,'')); return isNaN(n)?null:n; }
+function hesaplaBKI(boy, kilo){
+  let b = parseNum(boy), k = parseNum(kilo);
+  if(!b || !k) return '';
+  if(b > 3) b = b/100; // cm girildiyse metreye çevir
+  if(b < 0.5 || b > 2.5 || k < 5 || k > 250) return '';
+  return (k/(b*b)).toFixed(1);
+}
+function updateBKI(i){
+  const r = form.taramaSonuclari[i]; if(!r) return;
+  r.bki = hesaplaBKI(r.boy, r.kilo);
+  const el = document.querySelector(`[data-path="taramaSonuclari.${i}.bki"]`);
+  if(el) el.value = r.bki;
+}
 document.addEventListener('change', (e)=>{
   const p = e.target.dataset && e.target.dataset.path;
   if(!p) return;
@@ -695,7 +721,9 @@ document.addEventListener('click', (e)=>{
   if(addPath){
     const factory = BLANK_FACTORIES[e.target.dataset.factory];
     const arr = getPath(form, addPath);
-    arr.push(factory());
+    const fillTo = +(e.target.dataset.fillto||0);
+    const count = fillTo ? Math.max(0, fillTo - arr.length) : Math.max(1, +(e.target.dataset.count||1));
+    for(let i=0;i<count;i++) arr.push(factory());
     renderTabContent();
     return;
   }
